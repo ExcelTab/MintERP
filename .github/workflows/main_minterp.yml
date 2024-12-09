@@ -24,14 +24,8 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
-      - name : dotnet publish
+      - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Install dotnet ef
-        run: dotnet tool install --global dotnet-ef
-        
-      - name : Create migration bundle
-        run: dotnet ef migrations bundle -o ${{env.DOTNET_ROOT}}/myapp/migrationsbundle
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -57,9 +51,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_982748463F1743E986C7F54587AE0718 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FE781CC71A1847BB926DE9274E81A83A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3C12C485581B4D80A59774A112292E7B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8F5D79E712EC4F119A523C7C850646B6 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_933C39556DF7438D804D4AD2A5F06FED }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4B1863BBF4974A08AFEAE6BB7BA5363A }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
