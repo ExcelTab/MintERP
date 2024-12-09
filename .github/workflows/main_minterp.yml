@@ -25,19 +25,19 @@ jobs:
         run: dotnet build "Mint ERP.sln" --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish "Mint ERP.sln" -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish "Mint ERP.sln" -c Release -o ${{github.workspace}}/myapp
 
       - name : Install dotnet ef
         run: dotnet tool install --global dotnet-ef --version 8.*
 
       - name : Create migrations bundle
-        run: dotnet ef migrations bundle --runtime linux-x64 -o ${{env.DOTNET_ROOT}}/myapp/migrationsbundle
+        run: dotnet ef migrations bundle --runtime linux-x64 -o ${{github.workspace}}/myapp/migrationsbundle
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{github.workspace}}/myapp
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,9 +57,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AB747F58864342EB9112222DC2B22FB4 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3664125A5C9C4DAC96D0E9B241CC8C4A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4BCAB857DF1449FA960F59F465A94D56 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -67,5 +67,4 @@ jobs:
         with:
           app-name: 'MintERP'
           slot-name: 'Production'
-          package: ${{env.DOTNET_ROOT}}/myapp
-          
+          package: ${{github.workspace}}/myapp
